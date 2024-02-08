@@ -5,6 +5,8 @@ go 1.21.4
 require github.com/spf13/viper v1.18.2
 
 require (
+	github.com/dr3dnought/exerror v0.0.0-20231227162040-675decaef6fa
+	github.com/dr3dnought/request_builder v0.0.0-20240103083619-bb7a14763412
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect

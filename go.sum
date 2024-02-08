@@ -1,5 +1,9 @@
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dr3dnought/exerror v0.0.0-20231227162040-675decaef6fa h1:lS3cN7sKWF3lEMtzkHrDKHmJlxNyh66vymU/GiiyqGM=
+github.com/dr3dnought/exerror v0.0.0-20231227162040-675decaef6fa/go.mod h1:OpVBFgxZHnRXqOh6C0EEW774Y832tkpidyypfjjR7LQ=
+github.com/dr3dnought/request_builder v0.0.0-20240103083619-bb7a14763412 h1:NR+cuVGwHO3vYSb4sAGjxGHFntDjl0SJK2GLiP2C/Ok=
+github.com/dr3dnought/request_builder v0.0.0-20240103083619-bb7a14763412/go.mod h1:u1ymFyF/vYQ2JhVh1K6MeUnL+ti1/SG7ab8+OLlwBpY=
 github.com/fsnotify/fsnotify v1.7.0 h1:8JEhPFa5W2WU7YfeZzPNqzMP6Lwt7L2715Ggo0nosvA=
 github.com/fsnotify/fsnotify v1.7.0/go.mod h1:40Bi/Hjc2AVfZrqy+aj+yEI+/bRxZnMJyTJwOpGvigM=
 github.com/hashicorp/hcl v1.0.0 h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=

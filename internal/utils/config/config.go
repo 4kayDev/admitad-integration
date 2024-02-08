@@ -23,6 +23,7 @@ type Config struct {
 	Port    uint16
 	Host    string
 	DB      DataBaseConfig
+	Admitad AdmitadConfig
 }
 
 type DataBaseConfig struct {
@@ -32,6 +33,12 @@ type DataBaseConfig struct {
 	Name     string
 	Password string
 	SSLMode  string
+}
+
+type AdmitadConfig struct {
+	ClientId     string
+	ClientSecret string
+	URL          string
 }
 
 func LoadConfig(envMode, path string) (*Config, error) {
