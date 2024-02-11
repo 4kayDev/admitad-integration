@@ -46,7 +46,7 @@ func MustNewSQLite(cfg *config.Config) *gorm.DB {
 		panic(err)
 	}
 
-	db.AutoMigrate(&models.Affiliate{})
+	db.AutoMigrate(&models.Offer{})
 
 	return db
 }
@@ -65,7 +65,7 @@ func MustNewTestDB(t *testing.T) *gorm.DB {
 		require.NoError(t, err)
 	}
 
-	db.AutoMigrate(&models.Affiliate{})
+	db.AutoMigrate(&models.Offer{})
 
 	t.Cleanup(func() {
 		dbInstance, err := db.DB()
