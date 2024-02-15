@@ -19,7 +19,7 @@ type Affiliate struct {
 	CR                        float32    `json:"cr"`
 	ECPC                      float32    `json:"ecpc"`
 	EPC                       float32    `json:"epc"`
-	CrTrend                   float32    `json:"cr_trend"`
+	CrTrend                   string     `json:"cr_trend"`
 	Categories                []Category `json:"categories"`
 	ActionType                string     `json:"action_type"`
 	IsIndividualTerms         bool       `json:"individual_terms"`

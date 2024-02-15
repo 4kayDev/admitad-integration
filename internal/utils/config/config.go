@@ -38,6 +38,7 @@ type DataBaseConfig struct {
 type AdmitadConfig struct {
 	ClientId     string
 	ClientSecret string
+	ClientB64    string
 	URL          string
 }
 

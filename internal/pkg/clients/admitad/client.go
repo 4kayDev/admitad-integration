@@ -1,7 +1,6 @@
 package admitad
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -98,10 +97,13 @@ func (c *Client) GetAffiliates(input *GetAffiliatesInput) ([]models.Affiliate, *
 		return nil, parseApiError(response.StatusCode, nil)
 	}
 
+	fmt.Println(string(rawBody[:50000]))
+
 	affilates := new(responseType)
 	err = json.Unmarshal(rawBody, affilates)
 	if err != nil {
-		return nil, exerror.New(ErrInvalidEntity, exerror.Important(), exerror.Message(fmt.Sprintf("%s can not be casted to Authorization type", string(rawBody))))
+		fmt.Println(err)
+		return nil, exerror.New(ErrInvalidEntity, exerror.Important(), exerror.Message(fmt.Sprintf("API Response can not be casted to Affiliates type")))
 	}
 
 	return affilates.Items, nil
@@ -119,10 +121,11 @@ func (c *Client) syncToken() (string, *exerror.ExtendedError) {
 
 func (c *Client) refreshToken() (*models.Authorization, *exerror.ExtendedError) {
 	response, err := c.builder.SetMethod("POST").SetPath("token/").SetHeaders(map[string]string{
-		"Content-Type":  "application/x-www-form-urlencoded;charset=UTF-8",
-		"Authorization": "Basic " + c.buildCredentialsStr(),
+		"Content-Type":  "application/x-www-form-urlencoded",
+		"Authorization": "Basic " + c.cfg.ClientB64,
 	}).SetBody([]byte(c.buildRefreshTokenBody())).Build().Execute(c.httpClient)
 	if err != nil {
+		fmt.Println(err)
 		return nil, exErrRequest
 	}
 
@@ -133,7 +136,7 @@ func (c *Client) refreshToken() (*models.Authorization, *exerror.ExtendedError) 
 	}
 
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
-		return nil, parseApiError(response.StatusCode, nil)
+		return nil, parseApiError(response.StatusCode, rawBody)
 	}
 
 	authorization := new(models.Authorization)
@@ -143,10 +146,6 @@ func (c *Client) refreshToken() (*models.Authorization, *exerror.ExtendedError) 
 	}
 
 	return authorization, nil
-}
-
-func (c *Client) buildCredentialsStr() string {
-	return base64.StdEncoding.EncodeToString([]byte(c.cfg.ClientId + ":" + c.cfg.ClientSecret))
 }
 
 func (c *Client) buildRefreshTokenBody() string {
