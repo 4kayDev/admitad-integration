@@ -13,19 +13,14 @@ import (
 
 type CreateOfferInput struct {
 	AdmitadID   int
-	Name        string
-	Description string
+	Data        string
 	SharedValue int
-	ImageURL    string
 }
 
 func (s *Storage) CreateOffer(ctx context.Context, input *CreateOfferInput) (*models.Offer, error) {
 	offer := &models.Offer{
-		AdmitadID:   input.AdmitadID,
-		Name:        input.Name,
-		Description: input.Description,
-		ShareValue:  input.SharedValue,
-		ImageURL:    input.ImageURL,
+		AdmitadID:  input.AdmitadID,
+		ShareValue: input.SharedValue,
 	}
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
@@ -83,19 +78,15 @@ func (s *Storage) FindOffersByAdmitadID(ctx context.Context, input *FindOffersBy
 
 type UpdateOfferInput struct {
 	ID          uuid.UUID
-	Name        string
-	Description string
+	Data        string
 	SharedValue int
-	ImageURL    string
 }
 
 func (s *Storage) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*models.Offer, error) {
 	offer := &models.Offer{
-		ID:          input.ID,
-		Name:        input.Name,
-		Description: input.Description,
-		ShareValue:  input.SharedValue,
-		ImageURL:    input.ImageURL,
+		ID:         input.ID,
+		ShareValue: input.SharedValue,
+		Data:       input.Data,
 	}
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)

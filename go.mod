@@ -14,6 +14,7 @@ require (
 )
 
 require (
+	github.com/Pallinder/go-randomdata v1.2.0
 	github.com/avito-tech/go-transaction-manager v1.4.1
 	github.com/dr3dnought/exerror v0.0.0-20231227162040-675decaef6fa
 	github.com/dr3dnought/request_builder v0.0.0-20240103083619-bb7a14763412

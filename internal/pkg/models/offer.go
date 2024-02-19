@@ -8,12 +8,10 @@ import (
 )
 
 type Offer struct {
-	ID          uuid.UUID `gorm:"column:id;primaryKey"`
-	AdmitadID   int       `gorm:"column:admitad_id;unique;index"`
-	ShareValue  int       `gorm:"shared_value"`
-	Name        string    `gorm:"name"`
-	Description string    `gorm:"column:description"`
-	ImageURL    string    `gorm:"image_url"`
+	ID         uuid.UUID `gorm:"column:id;primaryKey"`
+	AdmitadID  int       `gorm:"column:admitad_id;unique;index"`
+	ShareValue int       `gorm:"column:shared_value"`
+	Data       string    `gorm:"column:data"`
 
 	CreatedAt *time.Time `gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt *time.Time `gorm:"column:updated_at;autoUpdateTime"`
