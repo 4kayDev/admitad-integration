@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package admitadintegration;
+option go_package = "/admitadintegration";
+
+service AdmitadIntegration {
+  rpc GetOffers(GetOffersRequest) returns (GetOffersResponse) {}
+  rpc ToogleSaveOffer(ToogleSaveOfferRequest) returns (ToogleSaveOfferResponse) {}
+  rpc GetSavedOffers(GetSavedOffersRequest) returns (GetSavedOffersResponse) {}
+  rpc UpdateSavedOffer(UpdateSavedOfferRequest) returns (UpdateSavedOfferResponse) {}
+  rpc InitLink(InitLinkRequest) returns (InitLinkResponse) {}
+}
+
+message Offer {
+  string id = 1;
+  int64 admitad_id = 2;
+  int32 shared_value = 3;
+  string data = 4;
+  bool is_saved = 5;
+}
+
+message GetOffersRequest {
+  int64 limit = 1;
+  int64 offset = 2;
+}
+
+enum GetOffersErrorCode {
+  GET_AFFILIATE_PROGRAMS_UNSPECIFIED = 0;
+}
+
+message GetOffersResponse {
+  repeated Offer offers = 1;
+  GetOffersErrorCode error_code = 2;
+}
+
+message ToogleSaveOfferRequest {
+  int64 admitad_id = 1;
+}
+
+enum ToogleSaveOfferErrorCode {
+  SAVE_OFFER_ERROR_CODE_UNSPECIFIED = 0;
+  SAVE_OFFER_ERROR_CODE_VALIDATION = 1;
+  SAVE_OFFER_ERROR_CODE_NOT_FOUND = 2;
+}
+
+message ToogleSaveOfferResponse {
+  Offer offer = 1;
+  ToogleSaveOfferErrorCode error_code = 2;
+}
+
+message GetSavedOffersRequest {
+  int64 limit = 1;
+  int64 offset = 2;
+}
+
+enum GetSavedOffersErrorCode {
+  GET_SAVED_OFFERS_ERROR_CODE_UNSPECIFIED = 0;
+  GET_SAVED_OFFERS_ERROR_CODE_VALIDATION = 1;
+}
+
+message GetSavedOffersResponse {
+  repeated Offer offers = 1;
+  GetSavedOffersErrorCode error_code = 2;
+}
+
+message UpdateSavedOfferRequest {
+  string id = 1;
+  int64 shared_value = 2;
+}
+
+enum UpdateSavedOfferErroCode {
+  UPDATE_SAVED_OFFER_ERROR_CODE_UNSPECIFIED = 0;
+  UPDATE_SAVED_OFFER_ERROR_CODE_VALIDATION = 1;
+  UPDATE_SAVED_OFFER_ERROR_CODE_NOT_FOUND = 2;
+}
+
+message UpdateSavedOfferResponse {
+  Offer offer = 1;
+  UpdateSavedOfferErroCode error_code = 2;
+}
+
+message InitLinkRequest {
+  string id = 1;
+}
+
+enum InitLinkErrorCode {
+  INIT_LINK_ERROR_CODE_UNSPECIFIED = 0;
+  INIT_LINK_ERROR_CODE_VALIDATION = 1;
+  INIT_LINK_ERROR_CODE_NOT_FOUND = 2;
+}
+
+message InitLinkResponse {
+  string link = 1;
+  InitLinkErrorCode error_code = 2;
+}
