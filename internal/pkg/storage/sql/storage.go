@@ -9,6 +9,7 @@ import (
 	"github.com/4kayDev/admitad-integration/internal/utils/config"
 	trmgorm "github.com/avito-tech/go-transaction-manager/gorm"
 	"github.com/test-go/testify/require"
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -51,6 +52,27 @@ func MustNewSQLite(cfg *config.Config) *gorm.DB {
 	return db
 }
 
+func NewPostgresDB(cfg *config.Config) (*gorm.DB, error) {
+	return gorm.Open(postgres.Open(buildDSN(cfg)), &gorm.Config{
+		TranslateError: true,
+	})
+}
+
+func MustNewPostgresDB(cfg *config.Config) *gorm.DB {
+	db, err := NewPostgresDB(cfg)
+	if err != nil {
+		panic(err)
+	}
+
+	if err != nil {
+		panic(err)
+	}
+
+	db.AutoMigrate(&models.Offer{}, &models.Click{})
+
+	return db
+}
+
 func MustNewTestDB(t *testing.T) *gorm.DB {
 	const dbName = "test_storage.db"
 	db, err := gorm.Open(sqlite.Open(dbName), &gorm.Config{
@@ -65,7 +87,7 @@ func MustNewTestDB(t *testing.T) *gorm.DB {
 		require.NoError(t, err)
 	}
 
-	db.AutoMigrate(&models.Offer{})
+	db.AutoMigrate(&models.Offer{}, &models.Click{})
 
 	t.Cleanup(func() {
 		dbInstance, err := db.DB()
