@@ -79,7 +79,7 @@ func (c *Container) GetTransactionManager() trm.Manager {
 
 func (c *Container) GetService() *service.Service {
 	return get(&c.service, func() *service.Service {
-		return service.NewService()
+		return service.NewService(c.GetPostgresDB(), c.GetAdmitadClient())
 	})
 }
 

@@ -2,7 +2,10 @@ module github.com/4kayDev/admitad-integration
 
 go 1.21.4
 
-require github.com/spf13/viper v1.18.2
+require (
+	github.com/spf13/viper v1.18.2
+	google.golang.org/protobuf v1.31.0
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
@@ -20,11 +23,9 @@ require (
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
 )
 
 require (
-	github.com/Pallinder/go-randomdata v1.2.0
 	github.com/avito-tech/go-transaction-manager v1.4.1
 	github.com/dr3dnought/exerror v0.0.0-20231227162040-675decaef6fa
 	github.com/dr3dnought/request_builder v0.0.0-20240103083619-bb7a14763412
