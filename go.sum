@@ -20,6 +20,8 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8Yc
 github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cuUVRXasLTGF7a8hSLbxyZXjz+1KgoB3wDUb6vlszIc=
 github.com/dr3dnought/exerror v0.0.0-20231227162040-675decaef6fa h1:lS3cN7sKWF3lEMtzkHrDKHmJlxNyh66vymU/GiiyqGM=
 github.com/dr3dnought/exerror v0.0.0-20231227162040-675decaef6fa/go.mod h1:OpVBFgxZHnRXqOh6C0EEW774Y832tkpidyypfjjR7LQ=
+github.com/dr3dnought/gospadi v0.0.0-20240227074845-68110c4b3c5a h1:eX2uys2XVZ6kIFvsznEk076rBpj1G9F0d76rVmw0hcs=
+github.com/dr3dnought/gospadi v0.0.0-20240227074845-68110c4b3c5a/go.mod h1:I4yd8FydfKC19gaBv8/QkMJxie7KAIAL2+0eu+mEEdk=
 github.com/dr3dnought/request_builder v0.0.0-20240103083619-bb7a14763412 h1:NR+cuVGwHO3vYSb4sAGjxGHFntDjl0SJK2GLiP2C/Ok=
 github.com/dr3dnought/request_builder v0.0.0-20240103083619-bb7a14763412/go.mod h1:u1ymFyF/vYQ2JhVh1K6MeUnL+ti1/SG7ab8+OLlwBpY=
 github.com/frankban/quicktest v1.14.6 h1:7Xjx+VpznH+oBnejlPUj8oUpdxnVs4f8XU8WnHkI4W8=
