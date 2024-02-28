@@ -142,9 +142,13 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 	offers := make([]*pb.Offer, 0, len(affiliates))
 	for _, e := range affiliates {
 		isSaved := false
+		name := ""
+		description := ""
 		for _, o := range savedOffers {
 			if o.AdmitadID == e.Id {
 				isSaved = true
+				name = e.Name
+				description = e.Description
 			}
 		}
 
@@ -152,6 +156,8 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 			AdmitadId:   int64(e.Id),
 			SharedValue: 0,
 			Data:        jsoner.Jsonify(e),
+			Name:        name,
+			Description: description,
 			IsSaved:     isSaved,
 		})
 	}

@@ -92,7 +92,7 @@ func (s *Storage) FindOffersByAdmitadID(ctx context.Context, input *FindOffersBy
 	offers := make([]*models.Offer, 0)
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
-	err := tr.Order("created_at ASC").Where("admitad_id = ?", input.IDs).Find(&offers).Error
+	err := tr.Order("created_at ASC").Where("admitad_id IN ?", input.IDs).Find(&offers).Error
 	if err != nil {
 		return nil, err
 	}
