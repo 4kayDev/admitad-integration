@@ -5,7 +5,8 @@ option go_package = "/admitadintegration";
 
 service AdmitadIntegration {
   rpc GetOffers(GetOffersRequest) returns (GetOffersResponse) {}
-  rpc ToggleSaveOffer(ToggleSaveOfferRequest) returns (ToggleSaveOfferResponse) {}
+  rpc SaveOffer(SaveOfferRequest) returns (SaveOfferResponse) {}
+  rpc DeleteOffer(DeleteOfferRequest) returns (DeleteOfferResponse) {}
   rpc GetSavedOffers(GetSavedOffersRequest) returns (GetSavedOffersResponse) {}
   rpc UpdateSavedOffer(UpdateSavedOfferRequest) returns (UpdateSavedOfferResponse) {}
   rpc InitLink(InitLinkRequest) returns (InitLinkResponse) {}
@@ -33,19 +34,34 @@ message GetOffersResponse {
   GetOffersErrorCode error_code = 2;
 }
 
-message ToggleSaveOfferRequest {
+message SaveOfferRequest {
   int64 admitad_id = 1;
 }
 
-enum ToggleSaveOfferErrorCode {
+enum SaveOfferErrorCode {
   SAVE_OFFER_ERROR_CODE_UNSPECIFIED = 0;
   SAVE_OFFER_ERROR_CODE_VALIDATION = 1;
-  SAVE_OFFER_ERROR_CODE_NOT_FOUND = 2;
+  SAVE_OFFER_ERROR_CODE_ALREDY_EXISTS = 2;
 }
 
-message ToggleSaveOfferResponse {
+message SaveOfferResponse {
   Offer offer = 1;
-  ToggleSaveOfferErrorCode error_code = 2;
+  SaveOfferErrorCode error_code = 2;
+}
+
+message DeleteOfferRequest {
+  string id = 1;
+}
+
+enum DeleteOfferErrorCode {
+  DELETE_OFFER_ERROR_CODE_UNSPECIFIED = 0;
+  DELETE_OFFER_ERROR_CODE_VALIDATION = 1;
+  DELETE_OFFER_ERROR_CODE_NOT_FOUND = 3;
+}
+
+message DeleteOfferResponse {
+  Offer offer = 1;
+  DeleteOfferErrorCode error_code = 2;
 }
 
 message GetSavedOffersRequest {
