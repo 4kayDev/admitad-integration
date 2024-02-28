@@ -11,12 +11,14 @@ import (
 )
 
 type CreateClickInput struct {
-	OfferID uuid.UUID
+	RequestId uuid.UUID
+	OfferID   uuid.UUID
 }
 
 func (s *Storage) CreateClick(ctx context.Context, input *CreateClickInput) (*models.Click, error) {
 	click := &models.Click{
-		OfferID: input.OfferID,
+		RequestId: input.RequestId,
+		OfferID:   input.OfferID,
 	}
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
@@ -25,6 +27,8 @@ func (s *Storage) CreateClick(ctx context.Context, input *CreateClickInput) (*mo
 		switch {
 		case errors.Is(err, gorm.ErrForeignKeyViolated):
 			return nil, storage.ErrForeignKey
+		case errors.Is(err, gorm.ErrDuplicatedKey):
+			return nil, storage.ErrEntityExists
 		default:
 			return nil, err
 		}

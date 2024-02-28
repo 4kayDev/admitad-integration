@@ -14,13 +14,20 @@ import (
 type CreateOfferInput struct {
 	AdmitadID   int
 	Data        string
+	Name        string
+	Description string
+	Link        string
 	SharedValue int
 }
 
 func (s *Storage) CreateOffer(ctx context.Context, input *CreateOfferInput) (*models.Offer, error) {
 	offer := &models.Offer{
-		AdmitadID:  input.AdmitadID,
-		ShareValue: input.SharedValue,
+		AdmitadID:   input.AdmitadID,
+		Name:        input.Name,
+		Description: input.Description,
+		ShareValue:  input.SharedValue,
+		Data:        input.Data,
+		Link:        input.Link,
 	}
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
@@ -60,15 +67,32 @@ func (s *Storage) FindOffer(ctx context.Context, input *FindOfferInput) (*models
 	return offer, nil
 }
 
+type FindOffersInput struct {
+	Limit  int
+	Offset int
+}
+
+func (s *Storage) FindOffers(ctx context.Context, input *FindOffersInput) ([]*models.Offer, error) {
+	offers := make([]*models.Offer, 0)
+
+	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
+	err := tr.Model(&offers).Offset(input.Offset).Limit(input.Limit + 1).Find(&offers).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return offers, nil
+}
+
 type FindOffersByAdmitadIDInput struct {
 	IDs []int
 }
 
 func (s *Storage) FindOffersByAdmitadID(ctx context.Context, input *FindOffersByAdmitadIDInput) ([]*models.Offer, error) {
-	offers := make([]*models.Offer, 0, len(input.IDs))
+	offers := make([]*models.Offer, 0)
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
-	err := tr.Order("created_at ASC").Find(offers, input.IDs).Error
+	err := tr.Order("created_at ASC").Where("admitad_id = ?", input.IDs).Find(&offers).Error
 	if err != nil {
 		return nil, err
 	}
@@ -78,15 +102,17 @@ func (s *Storage) FindOffersByAdmitadID(ctx context.Context, input *FindOffersBy
 
 type UpdateOfferInput struct {
 	ID          uuid.UUID
-	Data        string
+	Name        string
+	Description string
 	SharedValue int
 }
 
 func (s *Storage) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*models.Offer, error) {
 	offer := &models.Offer{
-		ID:         input.ID,
-		ShareValue: input.SharedValue,
-		Data:       input.Data,
+		ID:          input.ID,
+		ShareValue:  input.SharedValue,
+		Name:        input.Name,
+		Description: input.Description,
 	}
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)

@@ -47,7 +47,7 @@ func MustNewSQLite(cfg *config.Config) *gorm.DB {
 		panic(err)
 	}
 
-	db.AutoMigrate(&models.Offer{})
+	db.AutoMigrate(&models.Offer{}, &models.Click{})
 
 	return db
 }

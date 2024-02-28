@@ -8,10 +8,13 @@ import (
 )
 
 type Offer struct {
-	ID         uuid.UUID `gorm:"column:id;primaryKey"`
-	AdmitadID  int       `gorm:"column:admitad_id;unique;index"`
-	ShareValue int       `gorm:"column:shared_value"`
-	Data       string    `gorm:"column:data"`
+	ID          uuid.UUID `gorm:"column:id;primaryKey"`
+	AdmitadID   int       `gorm:"column:admitad_id;unique;index"`
+	Name        string    `gorm:"column:name"`
+	Description string    `gorm:"description"`
+	ShareValue  int       `gorm:"column:shared_value"`
+	Data        string    `gorm:"column:data"`
+	Link        string    `gorm:"column:link"`
 
 	CreatedAt *time.Time `gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt *time.Time `gorm:"column:updated_at;autoUpdateTime"`
@@ -27,10 +30,6 @@ func (a *Offer) BeforeCreate(tx *gorm.DB) error {
 		a.ID = id
 	}
 
-	if a.AdmitadID == 0 {
-		return gorm.ErrInvalidValue
-	}
-
 	if err := a.validateShareValue(); err != nil {
 		return err
 	}
@@ -39,10 +38,6 @@ func (a *Offer) BeforeCreate(tx *gorm.DB) error {
 }
 
 func (a *Offer) BeforeUpdate(tx *gorm.DB) error {
-	if a.AdmitadID == 0 {
-		return gorm.ErrInvalidValue
-	}
-
 	if err := a.validateShareValue(); err != nil {
 		return err
 	}

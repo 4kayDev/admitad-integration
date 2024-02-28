@@ -16,8 +16,10 @@ type Storage interface {
 	CreateOffer(ctx context.Context, input *sql.CreateOfferInput) (*models.Offer, error)
 	FindOffer(ctx context.Context, input *sql.FindOfferInput) (*models.Offer, error)
 	FindOffersByAdmitadID(ctx context.Context, input *sql.FindOffersByAdmitadIDInput) ([]*models.Offer, error)
+	FindOffers(ctx context.Context, input *sql.FindOffersInput) ([]*models.Offer, error)
 	UpdateOffer(ctx context.Context, input *sql.UpdateOfferInput) (*models.Offer, error)
 	DeleteOffer(ctx context.Context, input *sql.DeleteOfferInput) (*models.Offer, error)
+	CreateClick(ctx context.Context, input *sql.CreateClickInput) (*models.Click, error)
 }
 
 func NewService(storage Storage, admitadClient *admitad.Client) *Service {

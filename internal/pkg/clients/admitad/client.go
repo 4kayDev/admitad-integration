@@ -117,10 +117,6 @@ func (c *Client) GetAffiliateById(input *GetAffiliateByIdInput) (*models.Affilia
 		return nil, exerr
 	}
 
-	type responseType struct {
-		Items []models.Affiliate `json:"results"`
-	}
-
 	response, err := c.builder.SetMethod("GET").SetPath(fmt.Sprintf("advcampaigns/%d/?language=ru", input.AdmiatdId)).SetHeaders(map[string]string{
 		"Authorization": "Bearer " + token,
 	}).Build().Execute(c.httpClient)
@@ -131,21 +127,17 @@ func (c *Client) GetAffiliateById(input *GetAffiliateByIdInput) (*models.Affilia
 	defer response.Body.Close()
 
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
-		return nil, parseApiError(response.StatusCode, nil)
+		return nil, parseApiError(response.StatusCode, rawBody)
 	}
 
-	affiliates := new(responseType)
-	err = json.Unmarshal(rawBody, affiliates)
+	affiliate := new(models.Affiliate)
+	err = json.Unmarshal(rawBody, affiliate)
 	if err != nil {
 		fmt.Println(err)
 		return nil, exerror.New(ErrInvalidEntity, exerror.Important(), exerror.Message(fmt.Sprintf("API Response can not be casted to Affiliates type")))
 	}
 
-	if len(affiliates.Items) == 0 {
-		return nil, exerror.New(ErrNotFound, exerror.Message(fmt.Sprintf("Affiliate with ID: %d not found", input.AdmiatdId)))
-	}
-
-	return &affiliates.Items[0], nil
+	return affiliate, nil
 }
 
 func (c *Client) syncToken() (string, *exerror.ExtendedError) {
@@ -204,10 +196,10 @@ func parseApiError(statusCode int, data []byte) *exerror.ExtendedError {
 	switch statusCode {
 	case http.StatusBadRequest:
 		return exerror.New(ErrBadRequest, exerror.Important(), exerror.Message(apiError.Description))
+	case http.StatusNotFound:
+		return exerror.New(ErrNotFound, exerror.Message(apiError.Error))
 	case http.StatusUnauthorized:
 		return exerror.New(ErrUnauthorized, exerror.Temporary(), exerror.Message(apiError.Description))
-	case http.StatusNotFound:
-		return exerror.New(ErrBadURL, exerror.Important())
 	case http.StatusForbidden:
 		return exerror.New(ErrNotEnoughRights, exerror.Message(apiError.Description))
 	case http.StatusInternalServerError:
