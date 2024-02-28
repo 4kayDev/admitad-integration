@@ -16,6 +16,7 @@ var (
 	ErrReachedMaxRequestNumber = errors.New("Maximum request count")
 	ErrInvalidEntity           = errors.New("Invalid entity")
 	ErrUnknown                 = errors.New("Unknown API Error")
+	ErrNotFound                = errors.New("Entity not found")
 )
 
 var (

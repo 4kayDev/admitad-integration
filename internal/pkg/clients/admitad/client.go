@@ -97,8 +97,6 @@ func (c *Client) GetAffiliates(input *GetAffiliatesInput) ([]models.Affiliate, *
 		return nil, parseApiError(response.StatusCode, nil)
 	}
 
-	fmt.Println(string(rawBody[:50000]))
-
 	affilates := new(responseType)
 	err = json.Unmarshal(rawBody, affilates)
 	if err != nil {
@@ -107,6 +105,47 @@ func (c *Client) GetAffiliates(input *GetAffiliatesInput) ([]models.Affiliate, *
 	}
 
 	return affilates.Items, nil
+}
+
+type GetAffiliateByIdInput struct {
+	AdmiatdId int
+}
+
+func (c *Client) GetAffiliateById(input *GetAffiliateByIdInput) (*models.Affiliate, *exerror.ExtendedError) {
+	token, exerr := c.syncToken()
+	if exerr != nil {
+		return nil, exerr
+	}
+
+	type responseType struct {
+		Items []models.Affiliate `json:"results"`
+	}
+
+	response, err := c.builder.SetMethod("GET").SetPath(fmt.Sprintf("advcampaigns/%d/?language=ru", input.AdmiatdId)).SetHeaders(map[string]string{
+		"Authorization": "Bearer " + token,
+	}).Build().Execute(c.httpClient)
+	if err != nil {
+		return nil, exerror.New(ErrInvalidEntity, exerror.Important(), exerror.Message(fmt.Sprintf("API Response can not be read")))
+	}
+	rawBody, err := io.ReadAll(response.Body)
+	defer response.Body.Close()
+
+	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		return nil, parseApiError(response.StatusCode, nil)
+	}
+
+	affiliates := new(responseType)
+	err = json.Unmarshal(rawBody, affiliates)
+	if err != nil {
+		fmt.Println(err)
+		return nil, exerror.New(ErrInvalidEntity, exerror.Important(), exerror.Message(fmt.Sprintf("API Response can not be casted to Affiliates type")))
+	}
+
+	if len(affiliates.Items) == 0 {
+		return nil, exerror.New(ErrNotFound, exerror.Message(fmt.Sprintf("Affiliate with ID: %d not found", input.AdmiatdId)))
+	}
+
+	return &affiliates.Items[0], nil
 }
 
 func (c *Client) syncToken() (string, *exerror.ExtendedError) {
