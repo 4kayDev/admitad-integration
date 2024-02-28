@@ -22,6 +22,7 @@ docker-compose.yaml
 pgdata/
 
 environments/
+dev.db
 
 # Configuration files
 # Dependency directories (remove the comment below to include it)
