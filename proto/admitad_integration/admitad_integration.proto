@@ -8,6 +8,7 @@ service AdmitadIntegration {
   rpc SaveOffer(SaveOfferRequest) returns (SaveOfferResponse) {}
   rpc DeleteOffer(DeleteOfferRequest) returns (DeleteOfferResponse) {}
   rpc GetSavedOffers(GetSavedOffersRequest) returns (GetSavedOffersResponse) {}
+  rpc GetSavedOffer(GetSavedOfferRequest) returns (GetSavedOfferResponse) {}
   rpc UpdateSavedOffer(UpdateSavedOfferRequest) returns (UpdateSavedOfferResponse) {}
   rpc InitLink(InitLinkRequest) returns (InitLinkResponse) {}
 }
@@ -79,6 +80,21 @@ enum GetSavedOffersErrorCode {
 message GetSavedOffersResponse {
   repeated Offer offers = 1;
   GetSavedOffersErrorCode error_code = 2;
+}
+
+message GetSavedOfferRequest {
+  string id = 1;
+} 
+
+enum GetSavedOfferErrorCode {
+  GET_SAVED_OFFER_ERROR_CODE_UNSPECIFIED = 0;
+  GET_SAVED_OFFER_ERROR_CODE_VALIDATION = 1;
+  GET_SAVED_OFFER_ERROR_CODE_NOT_FOUND = 2;
+}
+
+message GetSavedOfferResponse {
+  Offer offer = 1;
+  GetSavedOfferErrorCode error_code = 2;
 }
 
 message UpdateSavedOfferRequest {

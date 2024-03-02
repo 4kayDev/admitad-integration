@@ -12,6 +12,7 @@ import (
 	"github.com/4kayDev/admitad-integration/internal/pkg/storage/sql"
 	"github.com/4kayDev/admitad-integration/internal/utils/jsoner"
 	"github.com/dr3dnought/gospadi"
+	"github.com/google/uuid"
 )
 
 func (s *Service) DeleteOffer(ctx context.Context, input *DeleteOfferInput) (*pb.Offer, error) {
@@ -166,6 +167,34 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 	}
 
 	return offers, nil
+}
+
+type GetOfferInput struct {
+	ID uuid.UUID
+}
+
+func (s *Service) GetOffer(ctx context.Context, input *GetOfferInput) (*pb.Offer, error) {
+	offer, err := s.storage.FindOffer(ctx, &sql.FindOfferInput{
+		ID: input.ID,
+	})
+	if err != nil {
+		switch {
+		case errors.Is(err, storage.ErrEntityNotFound):
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &pb.Offer{
+		Id:          offer.ID.String(),
+		AdmitadId:   int64(offer.AdmitadID),
+		SharedValue: int32(offer.ShareValue),
+		Name:        offer.Name,
+		Description: offer.Description,
+		Data:        offer.Data,
+		IsSaved:     true,
+	}, nil
 }
 
 func (s *Service) InitLink(ctx context.Context, input *InitLinkInput) (string, error) {
