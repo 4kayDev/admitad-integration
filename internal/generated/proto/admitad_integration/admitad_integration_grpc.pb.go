@@ -26,6 +26,7 @@ type AdmitadIntegrationClient interface {
 	SaveOffer(ctx context.Context, in *SaveOfferRequest, opts ...grpc.CallOption) (*SaveOfferResponse, error)
 	DeleteOffer(ctx context.Context, in *DeleteOfferRequest, opts ...grpc.CallOption) (*DeleteOfferResponse, error)
 	GetSavedOffers(ctx context.Context, in *GetSavedOffersRequest, opts ...grpc.CallOption) (*GetSavedOffersResponse, error)
+	GetSavedOffer(ctx context.Context, in *GetSavedOfferRequest, opts ...grpc.CallOption) (*GetSavedOfferResponse, error)
 	UpdateSavedOffer(ctx context.Context, in *UpdateSavedOfferRequest, opts ...grpc.CallOption) (*UpdateSavedOfferResponse, error)
 	InitLink(ctx context.Context, in *InitLinkRequest, opts ...grpc.CallOption) (*InitLinkResponse, error)
 }
@@ -74,6 +75,15 @@ func (c *admitadIntegrationClient) GetSavedOffers(ctx context.Context, in *GetSa
 	return out, nil
 }
 
+func (c *admitadIntegrationClient) GetSavedOffer(ctx context.Context, in *GetSavedOfferRequest, opts ...grpc.CallOption) (*GetSavedOfferResponse, error) {
+	out := new(GetSavedOfferResponse)
+	err := c.cc.Invoke(ctx, "/admitadintegration.AdmitadIntegration/GetSavedOffer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *admitadIntegrationClient) UpdateSavedOffer(ctx context.Context, in *UpdateSavedOfferRequest, opts ...grpc.CallOption) (*UpdateSavedOfferResponse, error) {
 	out := new(UpdateSavedOfferResponse)
 	err := c.cc.Invoke(ctx, "/admitadintegration.AdmitadIntegration/UpdateSavedOffer", in, out, opts...)
@@ -100,6 +110,7 @@ type AdmitadIntegrationServer interface {
 	SaveOffer(context.Context, *SaveOfferRequest) (*SaveOfferResponse, error)
 	DeleteOffer(context.Context, *DeleteOfferRequest) (*DeleteOfferResponse, error)
 	GetSavedOffers(context.Context, *GetSavedOffersRequest) (*GetSavedOffersResponse, error)
+	GetSavedOffer(context.Context, *GetSavedOfferRequest) (*GetSavedOfferResponse, error)
 	UpdateSavedOffer(context.Context, *UpdateSavedOfferRequest) (*UpdateSavedOfferResponse, error)
 	InitLink(context.Context, *InitLinkRequest) (*InitLinkResponse, error)
 	mustEmbedUnimplementedAdmitadIntegrationServer()
@@ -120,6 +131,9 @@ func (UnimplementedAdmitadIntegrationServer) DeleteOffer(context.Context, *Delet
 }
 func (UnimplementedAdmitadIntegrationServer) GetSavedOffers(context.Context, *GetSavedOffersRequest) (*GetSavedOffersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSavedOffers not implemented")
+}
+func (UnimplementedAdmitadIntegrationServer) GetSavedOffer(context.Context, *GetSavedOfferRequest) (*GetSavedOfferResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSavedOffer not implemented")
 }
 func (UnimplementedAdmitadIntegrationServer) UpdateSavedOffer(context.Context, *UpdateSavedOfferRequest) (*UpdateSavedOfferResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSavedOffer not implemented")
@@ -212,6 +226,24 @@ func _AdmitadIntegration_GetSavedOffers_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdmitadIntegration_GetSavedOffer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSavedOfferRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdmitadIntegrationServer).GetSavedOffer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/admitadintegration.AdmitadIntegration/GetSavedOffer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdmitadIntegrationServer).GetSavedOffer(ctx, req.(*GetSavedOfferRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdmitadIntegration_UpdateSavedOffer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateSavedOfferRequest)
 	if err := dec(in); err != nil {
@@ -270,6 +302,10 @@ var AdmitadIntegration_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSavedOffers",
 			Handler:    _AdmitadIntegration_GetSavedOffers_Handler,
+		},
+		{
+			MethodName: "GetSavedOffer",
+			Handler:    _AdmitadIntegration_GetSavedOffer_Handler,
 		},
 		{
 			MethodName: "UpdateSavedOffer",
