@@ -144,15 +144,18 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 		isSaved := false
 		name := ""
 		description := ""
+		id := ""
 		for _, o := range savedOffers {
 			if o.AdmitadID == e.Id {
 				isSaved = true
+				id = o.ID.String()
 				name = e.Name
 				description = e.Description
 			}
 		}
 
 		offers = append(offers, &pb.Offer{
+			Id:          id,
 			AdmitadId:   int64(e.Id),
 			SharedValue: 0,
 			Data:        jsoner.Jsonify(e),
