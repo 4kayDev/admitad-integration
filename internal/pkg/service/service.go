@@ -255,3 +255,26 @@ func (s *Service) InitLink(ctx context.Context, input *InitLinkInput) (string, e
 
 	return offer.Link, nil
 }
+
+func (s *Service) FindOfferByNameOrDescription(ctx context.Context, name string) ([]*pb.Offer, error) {
+	offers, err := s.storage.FindOfferByNameOrDescription(ctx, &sql.FinOfferByNameOrDescriptionInput{
+		Name: name,
+	})
+
+	if err != nil {
+	return nil, err
+	}
+	pbOffers :=make( []*pb.Offer,0, len(offers))
+	for _,o := range offers {
+		pbOffers = append(pbOffers, &pb.Offer{
+			Id:          o.ID.String(),
+			AdmitadId:   int64(o.AdmitadID),
+			SharedValue: int32(o.ShareValue),
+			Name:        o.Name,
+			Description: o.Description,
+			Data:        o.Data,
+			IsSaved:     true,
+		})
+	}
+	return pbOffers, nil
+}

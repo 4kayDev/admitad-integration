@@ -100,6 +100,20 @@ func (s *Storage) FindOffersByAdmitadID(ctx context.Context, input *FindOffersBy
 	return offers, nil
 }
 
+type FinOfferByNameOrDescriptionInput struct {
+	Name        string
+}
+func (s *Storage) FindOfferByNameOrDescription(ctx context.Context, input *FinOfferByNameOrDescriptionInput) ([]*models.Offer, error) {
+	offers := make([]*models.Offer, 0)
+	
+	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
+	err := tr.Where("name LIKE ? OR description LIKE ?", "%"+input.Name+"%", "%"+input.Name+"%").Find(offers).Error
+	if err != nil {
+		return nil, err
+	}
+	return offers, nil
+}
+
 type UpdateOfferInput struct {
 	ID          uuid.UUID
 	Name        string

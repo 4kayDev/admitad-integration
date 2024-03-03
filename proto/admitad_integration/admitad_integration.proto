@@ -12,6 +12,7 @@ service AdmitadIntegration {
   rpc GetSavedOffer(GetSavedOfferRequest) returns (GetSavedOfferResponse) {}
   rpc UpdateSavedOffer(UpdateSavedOfferRequest) returns (UpdateSavedOfferResponse) {}
   rpc InitLink(InitLinkRequest) returns (InitLinkResponse) {}
+  rpc GetOfferByNameOrDescription(GetOfferByNameOrDescriptionRequest) returns (GetOfferByNameOrDescriptionResponse) {}
 }
 
 message Offer {
@@ -22,6 +23,13 @@ message Offer {
   string description = 5;
   string data = 6;
   bool is_saved = 7;
+}
+
+message GetOfferByNameOrDescriptionRequest {
+  string name = 1;
+}
+message GetOfferByNameOrDescriptionResponse {
+  repeated Offer offers = 1;
 }
 
 message GetOffersRequest {
