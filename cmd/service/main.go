@@ -15,7 +15,7 @@ func main() {
 	config := config.MustLoadConfig(flags.EnvMode, flags.ConfigPath)
 	container := di.NewContainer(context.Background(), config)
 	pb.RegisterAdmitadIntegrationServer(container.GetGRPCServer(), container.GetRPCServer())
-	fmt.Println("Success start")
+	
 	err := container.GetGRPCServer().Serve(*container.GetNetListener())
 	if err != nil {
 		fmt.Println(err, "Error while serving grpcServer", "SERVICE", "main")

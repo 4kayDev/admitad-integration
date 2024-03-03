@@ -3,13 +3,13 @@ module github.com/4kayDev/admitad-integration
 go 1.21.4
 
 require (
+	github.com/dr3dnought/gospadi v0.0.0-20240227074845-68110c4b3c5a
 	github.com/spf13/viper v1.18.2
 	google.golang.org/protobuf v1.32.0
 )
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/dr3dnought/gospadi v0.0.0-20240227074845-68110c4b3c5a // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect

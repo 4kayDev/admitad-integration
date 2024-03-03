@@ -24,10 +24,13 @@ func (s *Service) DeleteOffer(ctx context.Context, input *DeleteOfferInput) (*pb
 	}
 
 	return &pb.Offer{
-		Id:        offer.ID.String(),
-		AdmitadId: int64(offer.AdmitadID),
-		Data:      offer.Data,
-		IsSaved:   true,
+		Id:          offer.ID.String(),
+		AdmitadId:   int64(offer.AdmitadID),
+		SharedValue: int32(offer.ShareValue),
+		Name:        offer.Name,
+		Description: offer.Description,
+		Data:        offer.Data,
+		IsSaved:     true,
 	}, nil
 }
 
@@ -111,7 +114,7 @@ func (s *Service) GetSavedOffers(ctx context.Context, input *PaginationInput) ([
 		result = append(result, &pb.Offer{
 			Id:          e.ID.String(),
 			AdmitadId:   int64(e.AdmitadID),
-			SharedValue: 0,
+			SharedValue: int32(e.ShareValue),
 			Name:        e.Name,
 			Description: e.Description,
 			Data:        e.Data,
@@ -146,19 +149,21 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 		name := ""
 		description := ""
 		id := ""
+		sharedValue := 0
 		for _, o := range savedOffers {
 			if o.AdmitadID == e.Id {
 				isSaved = true
 				id = o.ID.String()
 				name = e.Name
 				description = e.Description
+				sharedValue = int(o.ShareValue)
 			}
 		}
 
 		offers = append(offers, &pb.Offer{
 			Id:          id,
 			AdmitadId:   int64(e.Id),
-			SharedValue: 0,
+			SharedValue: int32(sharedValue),
 			Data:        jsoner.Jsonify(e),
 			Name:        name,
 			Description: description,
