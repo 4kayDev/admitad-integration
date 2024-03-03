@@ -169,6 +169,38 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 	return offers, nil
 }
 
+type GetOfferByAdmitadId struct {
+	AdmitadID int64
+}
+
+func (s *Service) GetSavedOfferByAdmitadId(ctx context.Context, input *GetOfferByAdmitadId) (*pb.Offer, error) {
+	affiliate, exerr := s.admitadClient.GetAffiliateById(&admitad.GetAffiliateByIdInput{AdmiatdId: int(input.AdmitadID)})
+	if exerr != nil {
+		if errors.Is(exerr.Error(), admitad.ErrNotFound) {
+			return nil, ErrNotFound
+		}
+
+		return nil, exerr.Error()
+	}
+
+	result := &pb.Offer{
+		AdmitadId:   int64(affiliate.Id),
+		Name:        affiliate.Name,
+		Description: affiliate.Description,
+		Data:        jsoner.Jsonify(affiliate),
+	}
+
+	offer, _ := s.storage.FindOffer(ctx, &sql.FindOfferInput{})
+	if offer != nil {
+		result.Name = offer.Name
+		result.Description = offer.Description
+		result.Id = offer.ID.String()
+		result.IsSaved = true
+	}
+
+	return result, nil
+}
+
 type GetOfferInput struct {
 	ID uuid.UUID
 }

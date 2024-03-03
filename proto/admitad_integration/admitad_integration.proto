@@ -37,6 +37,20 @@ message GetOffersResponse {
   GetOffersErrorCode error_code = 2;
 }
 
+message GetOfferByAdmitadIdRequest {
+  int64 admitad_id = 1;
+}
+
+enum GetOfferByAdmitadIdErrorCode {
+  GET_OFFER_BY_ADMITAD_ID_ERROR_CODE_UNSPECIFIED = 0;
+  GET_OFFER_BY_ADMITAD_ID_ERROR_CODE_NOT_FOUND = 1;
+}
+
+message GetOfferByAdmitadIdResponse {
+  Offer offer = 1;
+  GetOfferByAdmitadIdErrorCode error_code = 2;
+}
+
 message SaveOfferRequest {
   int64 admitad_id = 1;
 }
