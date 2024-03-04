@@ -8,6 +8,7 @@ service AdmitadIntegration {
   rpc SaveOffer(SaveOfferRequest) returns (SaveOfferResponse) {}
   rpc GetOfferByAdmitadId(GetOfferByAdmitadIdRequest) returns (GetOfferByAdmitadIdResponse) {}
   rpc DeleteOffer(DeleteOfferRequest) returns (DeleteOfferResponse) {}
+  rpc GetSavedOffersByHidden(GetSavedOffersByHiddenRequest) returns (GetSavedOffersByHiddenResponse) {}
   rpc GetSavedOffers(GetSavedOffersRequest) returns (GetSavedOffersResponse) {}
   rpc GetSavedOffer(GetSavedOfferRequest) returns (GetSavedOfferResponse) {}
   rpc UpdateSavedOffer(UpdateSavedOfferRequest) returns (UpdateSavedOfferResponse) {}
@@ -92,10 +93,26 @@ message DeleteOfferResponse {
   DeleteOfferErrorCode error_code = 2;
 }
 
-message GetSavedOffersRequest {
+message GetSavedOffersByHiddenRequest {
   int64 limit = 1;
   int64 offset = 2;
   bool is_hidden = 3;
+}
+
+enum GetSavedOffersByHiddenErrorCode {
+  GET_SAVED_OFFERS_BY_HIDDEN_ERROR_CODE_UNSPECIFIED = 0;
+  GET_SAVED_OFFERS_BY_HIDDEN_ERROR_CODE_VALIDATION = 1;
+}
+
+message GetSavedOffersByHiddenResponse {
+  repeated Offer offers = 1;
+  GetSavedOffersByHiddenErrorCode error_code = 2;
+}
+
+
+message GetSavedOffersRequest {
+  int64 limit = 1;
+  int64 offset = 2;
 }
 
 enum GetSavedOffersErrorCode {
@@ -105,7 +122,7 @@ enum GetSavedOffersErrorCode {
 
 message GetSavedOffersResponse {
   repeated Offer offers = 1;
-  GetSavedOffersErrorCode error_code = 2;
+  GetSavedOffersByHiddenErrorCode error_code = 2;
 }
 
 message GetSavedOfferRequest {

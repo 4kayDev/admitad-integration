@@ -72,17 +72,34 @@ func (s *Storage) FindOffer(ctx context.Context, input *FindOfferInput) (*models
 	return offer, nil
 }
 
-type FindOffersInput struct {
+type FindOffersByHiddenInput struct {
 	Limit    int
 	Offset   int
 	IsHidden bool
+}
+
+func (s *Storage) FindOffersByHidden(ctx context.Context, input *FindOffersByHiddenInput) ([]*models.Offer, error) {
+	offers := make([]*models.Offer, 0)
+
+	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
+	err := tr.Model(&offers).Where("is_hidden = ?", input.IsHidden).Offset(input.Offset).Limit(input.Limit + 1).Find(&offers).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return offers, nil
+}
+
+type FindOffersInput struct {
+	Limit  int
+	Offset int
 }
 
 func (s *Storage) FindOffers(ctx context.Context, input *FindOffersInput) ([]*models.Offer, error) {
 	offers := make([]*models.Offer, 0)
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
-	err := tr.Model(&offers).Where("is_hidden = ?", input.IsHidden).Offset(input.Offset).Limit(input.Limit + 1).Find(&offers).Error
+	err := tr.Model(&offers).Offset(input.Offset).Limit(input.Limit + 1).Find(&offers).Error
 	if err != nil {
 		return nil, err
 	}

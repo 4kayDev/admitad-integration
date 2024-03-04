@@ -111,6 +111,31 @@ func (s *Service) GetSavedOffers(ctx context.Context, input *GetSavedOffersInput
 	offers, err := s.storage.FindOffers(ctx, &sql.FindOffersInput{
 		Limit:    input.Limit,
 		Offset:   input.Offset,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]*pb.Offer, 0, len(offers))
+	for _, e := range offers {
+		result = append(result, &pb.Offer{
+			Id:          e.ID.String(),
+			AdmitadId:   int64(e.AdmitadID),
+			SharedValue: int32(e.ShareValue),
+			Name:        e.Name,
+			Description: e.Description,
+			Data:        e.Data,
+			IsSaved:     true,
+		})
+	}
+
+	return result, nil
+}
+
+func (s *Service) GetSavedOffersByHidden(ctx context.Context, input *GetSavedOffersByHiddenInput) ([]*pb.Offer, error) {
+	offers, err := s.storage.FindOffersByHidden(ctx, &sql.FindOffersByHiddenInput{
+		Limit:    input.Limit,
+		Offset:   input.Offset,
 		IsHidden: input.IsHidden,
 	})
 	if err != nil {

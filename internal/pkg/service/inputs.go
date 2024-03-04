@@ -11,10 +11,15 @@ type GetOffersInput struct {
 	PaginationInput
 }
 
-type GetSavedOffersInput struct {
+type GetSavedOffersByHiddenInput struct {
 	PaginationInput
 	IsHidden bool
 }
+
+type GetSavedOffersInput struct {
+	PaginationInput
+}
+
 
 type SaveOfferInput struct {
 	AdmitadId int
