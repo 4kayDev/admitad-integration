@@ -278,8 +278,8 @@ func (s *Service) FindOfferByNameOrDescription(ctx context.Context, name string)
 	if err != nil {
 		return nil, err
 	}
-	pbOffers := make([]*pb.Offer, 0, len(offers))
-	for _, o := range offers {
+	pbOffers :=make([]*pb.Offer,0, len(offers))
+	for _,o := range offers {
 		pbOffers = append(pbOffers, &pb.Offer{
 			Id:          o.ID.String(),
 			AdmitadId:   int64(o.AdmitadID),
