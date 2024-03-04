@@ -162,11 +162,13 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 		ImageURL := ""
 		for _, o := range savedOffers {
 			if o.AdmitadID == e.Id {
+				if o.IsHidden != nil {
+					isHidden = *o.IsHidden
+				}
 				isSaved = true
 				id = o.ID.String()
 				name = o.Name
 				ImageURL = o.ImageURL
-				isHidden = *o.IsHidden
 				description = e.Description
 				sharedValue = int(o.ShareValue)
 			}
