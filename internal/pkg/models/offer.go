@@ -12,9 +12,11 @@ type Offer struct {
 	AdmitadID   int       `gorm:"column:admitad_id;unique;index"`
 	Name        string    `gorm:"column:name"`
 	Description string    `gorm:"description"`
+	ImageURL    string    `gorm:"column:image_url"`
 	ShareValue  int       `gorm:"column:shared_value"`
 	Data        string    `gorm:"column:data"`
 	Link        string    `gorm:"column:link"`
+	IsHidden    *bool     `gorm:"column:is_hidden"`
 
 	CreatedAt *time.Time `gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt *time.Time `gorm:"column:updated_at;autoUpdateTime"`

@@ -21,6 +21,8 @@ func (s *Server) UpdateSavedOffer(ctx context.Context, req *pb.UpdateSavedOfferR
 		ID:          id,
 		Name:        req.GetName(),
 		Description: req.GetDescription(),
+		ImageURL:    req.ImageUrl,
+		IsHidden:    req.IsHidden,
 		SharedValue: int(req.GetSharedValue()),
 	})
 	if err != nil {

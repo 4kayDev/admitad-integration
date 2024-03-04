@@ -21,8 +21,10 @@ message Offer {
   int32 shared_value = 3;
   string name = 4;
   string description = 5;
-  string data = 6;
-  bool is_saved = 7;
+  string image_url = 6;
+  string data = 7;
+  bool is_saved = 8;
+  bool is_hidden = 9;
 }
 
 message GetOfferByNameOrDescriptionRequest {
@@ -93,6 +95,7 @@ message DeleteOfferResponse {
 message GetSavedOffersRequest {
   int64 limit = 1;
   int64 offset = 2;
+  bool is_hidden = 3;
 }
 
 enum GetSavedOffersErrorCode {
@@ -125,6 +128,8 @@ message UpdateSavedOfferRequest {
   int64 shared_value = 2;
   string name = 3;
   string description = 4;
+  string image_url = 5;
+  optional bool is_hidden = 6;
 }
 
 enum UpdateSavedOfferErroCode {

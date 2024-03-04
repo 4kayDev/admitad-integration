@@ -29,8 +29,10 @@ func (s *Service) DeleteOffer(ctx context.Context, input *DeleteOfferInput) (*pb
 		SharedValue: int32(offer.ShareValue),
 		Name:        offer.Name,
 		Description: offer.Description,
+		ImageUrl:    offer.ImageURL,
 		Data:        offer.Data,
 		IsSaved:     true,
+		IsHidden:    *offer.IsHidden,
 	}, nil
 }
 
@@ -52,6 +54,7 @@ func (s *Service) SaveOffer(ctx context.Context, input *SaveOfferInput) (*pb.Off
 		Data:        string(data),
 		Name:        affliliate.Name,
 		Description: affliliate.Description,
+		ImageURL:    affliliate.ImageURL,
 		Link:        affliliate.SiteURL,
 		SharedValue: 0,
 	})
@@ -69,8 +72,10 @@ func (s *Service) SaveOffer(ctx context.Context, input *SaveOfferInput) (*pb.Off
 		SharedValue: int32(offer.ShareValue),
 		Name:        offer.Name,
 		Description: offer.Description,
+		ImageUrl:    affliliate.ImageURL,
 		Data:        offer.Data,
 		IsSaved:     true,
+		IsHidden:    *offer.IsHidden,
 	}, nil
 }
 
@@ -79,6 +84,8 @@ func (s *Service) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*pb
 		ID:          input.ID,
 		Name:        input.Name,
 		Description: input.Description,
+		ImageURL:    input.ImageURL,
+		IsHidden:    input.IsHidden,
 		SharedValue: input.SharedValue,
 	})
 	if err != nil {
@@ -100,10 +107,11 @@ func (s *Service) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*pb
 	}, nil
 }
 
-func (s *Service) GetSavedOffers(ctx context.Context, input *PaginationInput) ([]*pb.Offer, error) {
+func (s *Service) GetSavedOffers(ctx context.Context, input *GetSavedOffersInput) ([]*pb.Offer, error) {
 	offers, err := s.storage.FindOffers(ctx, &sql.FindOffersInput{
-		Limit:  input.Limit,
-		Offset: input.Offset,
+		Limit:    input.Limit,
+		Offset:   input.Offset,
+		IsHidden: input.IsHidden,
 	})
 	if err != nil {
 		return nil, err
@@ -150,11 +158,15 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 		description := ""
 		id := ""
 		sharedValue := 0
+		isHidden := true
+		ImageURL := ""
 		for _, o := range savedOffers {
 			if o.AdmitadID == e.Id {
 				isSaved = true
 				id = o.ID.String()
-				name = e.Name
+				name = o.Name
+				ImageURL = o.ImageURL
+				isHidden = *o.IsHidden
 				description = e.Description
 				sharedValue = int(o.ShareValue)
 			}
@@ -164,10 +176,12 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 			Id:          id,
 			AdmitadId:   int64(e.Id),
 			SharedValue: int32(sharedValue),
-			Data:        jsoner.Jsonify(e),
 			Name:        name,
 			Description: description,
+			ImageUrl:    ImageURL,
+			Data:        jsoner.Jsonify(e),
 			IsSaved:     isSaved,
+			IsHidden:    isHidden,
 		})
 	}
 
@@ -262,10 +276,10 @@ func (s *Service) FindOfferByNameOrDescription(ctx context.Context, name string)
 	})
 
 	if err != nil {
-	return nil, err
+		return nil, err
 	}
-	pbOffers :=make( []*pb.Offer,0, len(offers))
-	for _,o := range offers {
+	pbOffers := make([]*pb.Offer, 0, len(offers))
+	for _, o := range offers {
 		pbOffers = append(pbOffers, &pb.Offer{
 			Id:          o.ID.String(),
 			AdmitadId:   int64(o.AdmitadID),
@@ -278,3 +292,4 @@ func (s *Service) FindOfferByNameOrDescription(ctx context.Context, name string)
 	}
 	return pbOffers, nil
 }
+

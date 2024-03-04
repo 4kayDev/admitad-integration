@@ -13,6 +13,7 @@ type GetOffersInput struct {
 
 type GetSavedOffersInput struct {
 	PaginationInput
+	IsHidden bool
 }
 
 type SaveOfferInput struct {
@@ -23,6 +24,8 @@ type UpdateOfferInput struct {
 	ID          uuid.UUID
 	Name        string
 	Description string
+	ImageURL    string
+	IsHidden    *bool
 	SharedValue int
 }
 

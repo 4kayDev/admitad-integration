@@ -10,9 +10,12 @@ import (
 )
 
 func (s *Server) GetSavedOffers(ctx context.Context, req *pb.GetSavedOffersRequest) (*pb.GetSavedOffersResponse, error) {
-	offers, err := s.service.GetSavedOffers(ctx, &service.PaginationInput{
-		Limit:  int(req.GetLimit()),
-		Offset: int(req.GetOffset()),
+	offers, err := s.service.GetSavedOffers(ctx, &service.GetSavedOffersInput{
+		PaginationInput: service.PaginationInput{
+			Limit:  int(req.GetLimit()),
+			Offset: int(req.GetOffset()),
+		},
+		IsHidden: req.IsHidden,
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())

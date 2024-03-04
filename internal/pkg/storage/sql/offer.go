@@ -6,6 +6,7 @@ import (
 
 	"github.com/4kayDev/admitad-integration/internal/pkg/models"
 	"github.com/4kayDev/admitad-integration/internal/pkg/storage"
+	"github.com/4kayDev/admitad-integration/internal/utils/ref"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -16,18 +17,22 @@ type CreateOfferInput struct {
 	Data        string
 	Name        string
 	Description string
+	ImageURL    string
 	Link        string
 	SharedValue int
 }
 
 func (s *Storage) CreateOffer(ctx context.Context, input *CreateOfferInput) (*models.Offer, error) {
+
 	offer := &models.Offer{
 		AdmitadID:   input.AdmitadID,
 		Name:        input.Name,
 		Description: input.Description,
+		ImageURL:    input.ImageURL,
 		ShareValue:  input.SharedValue,
 		Data:        input.Data,
 		Link:        input.Link,
+		IsHidden:    ref.Ref[bool](true),
 	}
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
@@ -68,15 +73,16 @@ func (s *Storage) FindOffer(ctx context.Context, input *FindOfferInput) (*models
 }
 
 type FindOffersInput struct {
-	Limit  int
-	Offset int
+	Limit    int
+	Offset   int
+	IsHidden bool
 }
 
 func (s *Storage) FindOffers(ctx context.Context, input *FindOffersInput) ([]*models.Offer, error) {
 	offers := make([]*models.Offer, 0)
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
-	err := tr.Model(&offers).Offset(input.Offset).Limit(input.Limit + 1).Find(&offers).Error
+	err := tr.Model(&offers).Where("is_hidden = ?", input.IsHidden).Offset(input.Offset).Limit(input.Limit + 1).Find(&offers).Error
 	if err != nil {
 		return nil, err
 	}
@@ -101,11 +107,12 @@ func (s *Storage) FindOffersByAdmitadID(ctx context.Context, input *FindOffersBy
 }
 
 type FinOfferByNameOrDescriptionInput struct {
-	Name        string
+	Name string
 }
+
 func (s *Storage) FindOfferByNameOrDescription(ctx context.Context, input *FinOfferByNameOrDescriptionInput) ([]*models.Offer, error) {
 	offers := make([]*models.Offer, 0)
-	
+
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
 	err := tr.Where("name LIKE ? OR description LIKE ?", "%"+input.Name+"%", "%"+input.Name+"%").Find(offers).Error
 	if err != nil {
@@ -118,15 +125,20 @@ type UpdateOfferInput struct {
 	ID          uuid.UUID
 	Name        string
 	Description string
+	ImageURL    string
+	IsHidden    *bool
 	SharedValue int
 }
 
 func (s *Storage) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*models.Offer, error) {
 	offer := &models.Offer{
 		ID:          input.ID,
-		ShareValue:  input.SharedValue,
+		AdmitadID:   0,
 		Name:        input.Name,
 		Description: input.Description,
+		ImageURL:    input.ImageURL,
+		ShareValue:  input.SharedValue,
+		IsHidden:    input.IsHidden,
 	}
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
