@@ -109,8 +109,8 @@ func (s *Service) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*pb
 
 func (s *Service) GetSavedOffers(ctx context.Context, input *GetSavedOffersInput) ([]*pb.Offer, error) {
 	offers, err := s.storage.FindOffers(ctx, &sql.FindOffersInput{
-		Limit:    input.Limit,
-		Offset:   input.Offset,
+		Limit:  input.Limit,
+		Offset: input.Offset,
 	})
 	if err != nil {
 		return nil, err
@@ -234,13 +234,17 @@ func (s *Service) GetSavedOfferByAdmitadId(ctx context.Context, input *GetOfferB
 		Name:        affiliate.Name,
 		Description: affiliate.Description,
 		Data:        jsoner.Jsonify(affiliate),
+		IsSaved:     false,
 	}
 
-	offer, _ := s.storage.FindOffer(ctx, &sql.FindOfferInput{})
-	if offer != nil {
-		result.Name = offer.Name
-		result.Description = offer.Description
-		result.Id = offer.ID.String()
+	offers, _ := s.storage.FindOffersByAdmitadID(ctx, &sql.FindOffersByAdmitadIDInput{
+		IDs: []int{int(input.AdmitadID)},
+	})
+
+	if len(offers) > 0 {
+		result.Name = offers[0].Name
+		result.Description = offers[0].Description
+		result.Id = offers[0].ID.String()
 		result.IsSaved = true
 	}
 
@@ -305,8 +309,8 @@ func (s *Service) FindOfferByNameOrDescription(ctx context.Context, name string)
 	if err != nil {
 		return nil, err
 	}
-	pbOffers :=make([]*pb.Offer,0, len(offers))
-	for _,o := range offers {
+	pbOffers := make([]*pb.Offer, 0, len(offers))
+	for _, o := range offers {
 		pbOffers = append(pbOffers, &pb.Offer{
 			Id:          o.ID.String(),
 			AdmitadId:   int64(o.AdmitadID),
@@ -319,4 +323,3 @@ func (s *Service) FindOfferByNameOrDescription(ctx context.Context, name string)
 	}
 	return pbOffers, nil
 }
-
