@@ -152,6 +152,7 @@ func (s *Service) GetSavedOffersByHidden(ctx context.Context, input *GetSavedOff
 			Description: e.Description,
 			Data:        e.Data,
 			IsSaved:     true,
+			IsHidden:    *e.IsHidden,
 		})
 	}
 
@@ -242,6 +243,9 @@ func (s *Service) GetSavedOfferByAdmitadId(ctx context.Context, input *GetOfferB
 	})
 
 	if len(offers) > 0 {
+		if offers[0].IsHidden != nil {
+			result.IsHidden = *offers[0].IsHidden
+		}
 		result.Name = offers[0].Name
 		result.Description = offers[0].Description
 		result.Id = offers[0].ID.String()
