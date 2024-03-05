@@ -296,10 +296,21 @@ func (s *Service) InitLink(ctx context.Context, input *InitLinkInput) (string, e
 		return "", err
 	}
 
-	subId := uuid.New()
+	click, err := s.storage.CreateClick(ctx, &sql.CreateClickInput{
+		RequestId: input.RequestId,
+		OfferID:   input.ID,
+	})
+	if err != nil {
+		if errors.Is(err, storage.ErrEntityExists) {
+			return "", ErrEntityExists
+		}
+
+		return "", err
+	}
+
 	deeplink, exerr := s.admitadClient.BuildDeeplink(&admitad.BuildDeeplinkInput{
 		AdmitadId: offer.AdmitadID,
-		SubId:     subId.String(),
+		SubId:     click.ID.String(),
 		SiteURL:   offer.Link,
 	})
 	if exerr != nil {
@@ -310,21 +321,11 @@ func (s *Service) InitLink(ctx context.Context, input *InitLinkInput) (string, e
 		return "", exerr.Error()
 	}
 
-	click, err := s.storage.CreateClick(ctx, &sql.CreateClickInput{
-		ID:        subId,
-		RequestId: input.RequestId,
-		OfferID:   input.ID,
-		Link:      *deeplink,
-	})
-	if err != nil {
-		if errors.Is(err, storage.ErrEntityExists) {
-			return "", ErrEntityExists
-		}
-
-		return "", err
+	if deeplink == nil {
+		return "", ErrNotFound
 	}
 
-	return click.Link, nil
+	return *deeplink, nil
 }
 
 func (s *Service) FindOfferByNameOrDescription(ctx context.Context, name string) ([]*pb.Offer, error) {

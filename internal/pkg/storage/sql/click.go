@@ -19,8 +19,6 @@ type CreateClickInput struct {
 
 func (s *Storage) CreateClick(ctx context.Context, input *CreateClickInput) (*models.Click, error) {
 	click := &models.Click{
-		ID:        input.ID,
-		Link:      input.Link,
 		RequestId: input.RequestId,
 		OfferID:   input.OfferID,
 	}
