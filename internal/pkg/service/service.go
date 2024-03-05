@@ -104,6 +104,7 @@ func (s *Service) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*pb
 		Description: offer.Description,
 		Data:        offer.Data,
 		IsSaved:     true,
+		IsHidden:    *offer.IsHidden,
 	}, nil
 }
 
