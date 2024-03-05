@@ -11,12 +11,16 @@ import (
 )
 
 type CreateClickInput struct {
+	ID        uuid.UUID
 	RequestId uuid.UUID
 	OfferID   uuid.UUID
+	Link      string
 }
 
 func (s *Storage) CreateClick(ctx context.Context, input *CreateClickInput) (*models.Click, error) {
 	click := &models.Click{
+		ID:        input.ID,
+		Link:      input.Link,
 		RequestId: input.RequestId,
 		OfferID:   input.OfferID,
 	}

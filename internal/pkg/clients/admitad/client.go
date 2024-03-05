@@ -8,6 +8,7 @@ import (
 
 	"github.com/4kayDev/admitad-integration/internal/pkg/clients/admitad/models"
 	"github.com/4kayDev/admitad-integration/internal/utils/config"
+	"github.com/4kayDev/admitad-integration/internal/utils/jsoner"
 	"github.com/dr3dnought/exerror"
 	requestbuidler "github.com/dr3dnought/request_builder"
 )
@@ -121,7 +122,7 @@ func (c *Client) GetAffiliateById(input *GetAffiliateByIdInput) (*models.Affilia
 		"Authorization": "Bearer " + token,
 	}).Build().Execute(c.httpClient)
 	if err != nil {
-		return nil, exerror.New(ErrInvalidEntity, exerror.Important(), exerror.Message(fmt.Sprintf("API Response can not be read")))
+		return nil, exerror.New(ErrRequest, exerror.Important(), exerror.Message(fmt.Sprintf("API Response can not be read")))
 	}
 	rawBody, err := io.ReadAll(response.Body)
 	defer response.Body.Close()
@@ -138,6 +139,48 @@ func (c *Client) GetAffiliateById(input *GetAffiliateByIdInput) (*models.Affilia
 	}
 
 	return affiliate, nil
+}
+
+type BuildDeeplinkInput struct {
+	AdmitadId int
+	SubId     string
+	SiteURL   string
+}
+
+func (c *Client) BuildDeeplink(input *BuildDeeplinkInput) (*string, *exerror.ExtendedError) {
+	token, exerr := c.syncToken()
+	if exerr != nil {
+		return nil, exerr
+	}
+
+	response, err := c.builder.SetMethod("GET").SetPath(fmt.Sprintf("deeplink/%s/advcampaign/%d/?subid=%s&ulp=%s", c.cfg.WebmasterId, input.AdmitadId, input.SubId, input.SiteURL)).SetHeaders(map[string]string{
+		"Authorization": "Bearer " + token,
+	}).Build().Execute(c.httpClient)
+	if err != nil {
+		return nil, exerror.New(ErrRequest, exerror.Important(), exerror.Message(fmt.Sprintf("API Response can not be read")))
+	}
+	rawBody, err := io.ReadAll(response.Body)
+	fmt.Println(string(rawBody))
+	defer response.Body.Close()
+
+	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		return nil, parseApiError(response.StatusCode, nil)
+	}
+
+	deeplink := make([]string, 0)
+	err = json.Unmarshal(rawBody, &deeplink)
+	if err != nil {
+		fmt.Println(err)
+		return nil, exerror.New(ErrInvalidEntity, exerror.Important(), exerror.Message(fmt.Sprintf("API Response can not be casted to Deeplink type")))
+	}
+
+	fmt.Println(jsoner.Jsonify(deeplink))
+
+	if len(deeplink) != 0 {
+		return &deeplink[0], nil
+	}
+
+	return nil, exerror.New(ErrInternal, exerror.Important(), exerror.Message("Deeplink was not found in response body"))
 }
 
 func (c *Client) syncToken() (string, *exerror.ExtendedError) {
@@ -181,9 +224,9 @@ func (c *Client) refreshToken() (*models.Authorization, *exerror.ExtendedError) 
 
 func (c *Client) buildRefreshTokenBody() string {
 	if c.refreshAccessToken != "" {
-		return fmt.Sprintf("grant_type=refresh_token&client_id=%s&client_secret=%s&refresh_token=%s&scope=advcampaigns statistics", c.cfg.ClientId, c.cfg.ClientSecret, c.refreshAccessToken)
+		return fmt.Sprintf("grant_type=refresh_token&client_id=%s&client_secret=%s&refresh_token=%s&scope=advcampaigns statistics deeplink_generator", c.cfg.ClientId, c.cfg.ClientSecret, c.refreshAccessToken)
 	}
-	return fmt.Sprintf("grant_type=client_credentials&client_id=%s&scope=advcampaigns statistics", c.cfg.ClientId)
+	return fmt.Sprintf("grant_type=client_credentials&client_id=%s&scope=advcampaigns statistics deeplink_generator", c.cfg.ClientId)
 }
 
 func parseApiError(statusCode int, data []byte) *exerror.ExtendedError {
