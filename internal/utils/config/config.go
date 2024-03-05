@@ -39,6 +39,7 @@ type AdmitadConfig struct {
 	ClientId     string
 	ClientSecret string
 	ClientB64    string
+	WebmasterId  string
 	URL          string
 }
 
