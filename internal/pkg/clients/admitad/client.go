@@ -83,7 +83,7 @@ func (c *Client) GetAffiliates(input *GetAffiliatesInput) ([]models.Affiliate, *
 		Items []models.Affiliate `json:"results"`
 	}
 
-	response, err := c.builder.SetMethod("GET").SetPath(fmt.Sprintf("advcampaigns/?website=%soffset=%d&limit=%d&language=ru", c.cfg.WebmasterId, input.Offset, input.Limit)).SetHeaders(map[string]string{
+	response, err := c.builder.SetMethod("GET").SetPath(fmt.Sprintf("advcampaigns/?website=%s&offset=%d&limit=%d&language=ru", c.cfg.WebmasterId, input.Offset, input.Limit)).SetHeaders(map[string]string{
 		"Authorization": "Bearer " + token,
 	}).Build().Execute(c.httpClient)
 
