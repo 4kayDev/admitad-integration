@@ -127,6 +127,7 @@ func (s *Service) GetSavedOffers(ctx context.Context, input *GetSavedOffersInput
 			Description: e.Description,
 			Data:        e.Data,
 			IsSaved:     true,
+			IsHidden:    *e.IsHidden,
 		})
 	}
 
@@ -281,6 +282,7 @@ func (s *Service) GetOffer(ctx context.Context, input *GetOfferInput) (*pb.Offer
 		Description: offer.Description,
 		Data:        offer.Data,
 		IsSaved:     true,
+		IsHidden:    *offer.IsHidden,
 	}, nil
 }
 
@@ -324,6 +326,7 @@ func (s *Service) FindOfferByNameOrDescription(ctx context.Context, name string)
 			Description: o.Description,
 			Data:        o.Data,
 			IsSaved:     true,
+			IsHidden:    *o.IsHidden,
 		})
 	}
 	return pbOffers, nil
