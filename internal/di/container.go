@@ -67,7 +67,7 @@ func (c *Container) GetPostgresDB() *sql.Storage {
 
 func (c *Container) GetDB() *gorm.DB {
 	return get(&c.db, func() *gorm.DB {
-		return sql.MustNewSQLite(c.cfg)
+		return sql.MustNewPostgresDB(c.cfg)
 	})
 }
 
