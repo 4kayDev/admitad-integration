@@ -14,6 +14,7 @@ type Offer struct {
 	Description string    `gorm:"description"`
 	ImageURL    string    `gorm:"column:image_url"`
 	ShareValue  int       `gorm:"column:shared_value"`
+	UserValue   string    `gorm:"column:user_value"`
 	Data        string    `gorm:"column:data"`
 	Link        string    `gorm:"column:link"`
 	IsHidden    *bool     `gorm:"column:is_hidden"`

@@ -20,6 +20,7 @@ type CreateOfferInput struct {
 	ImageURL    string
 	Link        string
 	SharedValue int
+	UserValue   string
 }
 
 func (s *Storage) CreateOffer(ctx context.Context, input *CreateOfferInput) (*models.Offer, error) {
@@ -30,6 +31,7 @@ func (s *Storage) CreateOffer(ctx context.Context, input *CreateOfferInput) (*mo
 		Description: input.Description,
 		ImageURL:    input.ImageURL,
 		ShareValue:  input.SharedValue,
+		UserValue:   input.UserValue,
 		Data:        input.Data,
 		Link:        input.Link,
 		IsHidden:    ref.Ref[bool](true),
@@ -145,6 +147,7 @@ type UpdateOfferInput struct {
 	ImageURL    string
 	IsHidden    *bool
 	SharedValue int
+	UserValue   string
 }
 
 func (s *Storage) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*models.Offer, error) {
@@ -155,6 +158,7 @@ func (s *Storage) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*mo
 		Description: input.Description,
 		ImageURL:    input.ImageURL,
 		ShareValue:  input.SharedValue,
+		UserValue:   input.UserValue,
 		IsHidden:    input.IsHidden,
 	}
 

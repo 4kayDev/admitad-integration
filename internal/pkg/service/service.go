@@ -87,6 +87,7 @@ func (s *Service) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*pb
 		ImageURL:    input.ImageURL,
 		IsHidden:    input.IsHidden,
 		SharedValue: input.SharedValue,
+		UserValue:   input.UserValue,
 	})
 	if err != nil {
 		if errors.Is(err, storage.ErrEntityNotFound) {
@@ -102,9 +103,11 @@ func (s *Service) UpdateOffer(ctx context.Context, input *UpdateOfferInput) (*pb
 		SharedValue: int32(offer.ShareValue),
 		Name:        offer.Name,
 		Description: offer.Description,
+		ImageUrl:    offer.ImageURL,
 		Data:        offer.Data,
 		IsSaved:     true,
 		IsHidden:    *offer.IsHidden,
+		UserValue:   offer.UserValue,
 	}, nil
 }
 
@@ -125,9 +128,11 @@ func (s *Service) GetSavedOffers(ctx context.Context, input *GetSavedOffersInput
 			SharedValue: int32(e.ShareValue),
 			Name:        e.Name,
 			Description: e.Description,
+			ImageUrl:    e.ImageURL,
 			Data:        e.Data,
 			IsSaved:     true,
 			IsHidden:    *e.IsHidden,
+			UserValue:   e.UserValue,
 		})
 	}
 
@@ -152,9 +157,11 @@ func (s *Service) GetSavedOffersByHidden(ctx context.Context, input *GetSavedOff
 			SharedValue: int32(e.ShareValue),
 			Name:        e.Name,
 			Description: e.Description,
+			ImageUrl:    e.ImageURL,
 			Data:        e.Data,
 			IsSaved:     true,
 			IsHidden:    *e.IsHidden,
+			UserValue:   e.UserValue,
 		})
 	}
 
@@ -188,6 +195,7 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 		sharedValue := 0
 		isHidden := true
 		ImageURL := ""
+		userValue := ""
 		for _, o := range savedOffers {
 			if o.AdmitadID == e.Id {
 				if o.IsHidden != nil {
@@ -198,6 +206,7 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 				name = o.Name
 				ImageURL = o.ImageURL
 				description = e.Description
+				userValue = o.UserValue
 				sharedValue = int(o.ShareValue)
 			}
 		}
@@ -206,6 +215,7 @@ func (s *Service) GetOffers(ctx context.Context, input *GetOffersInput) ([]*pb.O
 			Id:          id,
 			AdmitadId:   int64(e.Id),
 			SharedValue: int32(sharedValue),
+			UserValue:   userValue,
 			Name:        name,
 			Description: description,
 			ImageUrl:    ImageURL,
@@ -252,6 +262,7 @@ func (s *Service) GetSavedOfferByAdmitadId(ctx context.Context, input *GetOfferB
 		result.Description = offers[0].Description
 		result.Id = offers[0].ID.String()
 		result.IsSaved = true
+		result.UserValue = offers[0].UserValue
 	}
 
 	return result, nil
@@ -280,9 +291,11 @@ func (s *Service) GetOffer(ctx context.Context, input *GetOfferInput) (*pb.Offer
 		SharedValue: int32(offer.ShareValue),
 		Name:        offer.Name,
 		Description: offer.Description,
+		ImageUrl:    offer.ImageURL,
 		Data:        offer.Data,
 		IsSaved:     true,
 		IsHidden:    *offer.IsHidden,
+		UserValue:   offer.UserValue,
 	}, nil
 }
 

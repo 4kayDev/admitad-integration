@@ -20,7 +20,6 @@ type GetSavedOffersInput struct {
 	PaginationInput
 }
 
-
 type SaveOfferInput struct {
 	AdmitadId int
 }
@@ -32,6 +31,7 @@ type UpdateOfferInput struct {
 	ImageURL    string
 	IsHidden    *bool
 	SharedValue int
+	UserValue   string
 }
 
 type DeleteOfferInput struct {
