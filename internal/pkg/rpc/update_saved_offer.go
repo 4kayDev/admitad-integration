@@ -24,6 +24,7 @@ func (s *Server) UpdateSavedOffer(ctx context.Context, req *pb.UpdateSavedOfferR
 		ImageURL:    req.ImageUrl,
 		IsHidden:    req.IsHidden,
 		SharedValue: int(req.GetSharedValue()),
+		UserValue:   req.UserValue,
 	})
 	if err != nil {
 		switch {
