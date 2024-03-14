@@ -133,7 +133,7 @@ func (s *Storage) FindOfferByNameOrDescription(ctx context.Context, input *FinOf
 	offers := make([]*models.Offer, 0)
 
 	tr := s.getter.DefaultTrOrDB(ctx, s.db).WithContext(ctx)
-	err := tr.Where("name LIKE ? OR description LIKE ?", "%"+input.Name+"%", "%"+input.Name+"%").Find(&offers).Error
+	err := tr.Where("(name LIKE ? OR description LIKE ?) AND is_hidden = ?", "%"+input.Name+"%", "%"+input.Name+"%", false).Find(&offers).Error
 	if err != nil {
 		return nil, err
 	}
