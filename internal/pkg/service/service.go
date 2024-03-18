@@ -357,9 +357,11 @@ func (s *Service) FindOfferByNameOrDescription(ctx context.Context, name string)
 			SharedValue: int32(o.ShareValue),
 			Name:        o.Name,
 			Description: o.Description,
+			ImageUrl:    o.ImageURL,
 			Data:        o.Data,
 			IsSaved:     true,
 			IsHidden:    *o.IsHidden,
+			UserValue:   o.UserValue,
 		})
 	}
 	return pbOffers, nil
